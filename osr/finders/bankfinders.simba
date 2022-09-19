@@ -1,0 +1,38 @@
+procedure BankFinder_GE;
+const
+  COLOR_BODY_GREY  := CTS2(6184805, 13, 0.20, 0.07);
+  COLOR_FEET_BROWN := CTS2(2966103, 8, 0.12, 0.20);
+const
+  WalkerContainer: TRSWalker = [];
+  Walker := PRSWalker(@WalkerContainer);
+var
+  GERect: TRectangle;
+  SearchBox: TBox;
+  SearchBoxes: TBoxArray;
+  TPA, TPAFeet, TPAGrey: TPointArray;
+  Dist20, Dist8: Integer;
+begin
+  if (Walker^ = []) then
+    Walker^.Setup([RSWalkerRegions.GRAND_EXCHANGE], 4);
+
+  Dist20 := MainScreen.NormalizeDistance(20);
+  Dist8 := MainScreen.NormalizeDistance(8);
+
+  GERect := Walker^.GetTileMS(RSWalkerLocations.GRAND_EXCHANGE, [5.5, 5.5]);
+
+  SearchBox := GERect.Bounds();
+  SearchBox.Clip(MainScreen.Bounds);
+
+  SRL.FindColors(TPAFeet, COLOR_FEET_BROWN, SearchBox);
+  for TPA in TPAFeet.Cluster(5) do
+    with TPA.Bounds() do
+      SearchBoxes += TBox.Create(X1 - Dist8, Y1 - Dist20, X2 + Dist8, Y2 + Dist8);
+
+  TPA := [];
+  for SearchBox in SearchBoxes do
+    if SRL.FindColors(TPAGrey, COLOR_BODY_GREY, SearchBox) then
+      TPA += TPAGrey;
+
+  ShowOnClient(TPA);
+end;
+

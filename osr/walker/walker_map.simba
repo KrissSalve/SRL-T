@@ -13,7 +13,7 @@ type
 type
   RSWalkerLocations = record
   class const
-    GRAND_EXCHANGE: TPoint = [4626, 2061];
+    GRAND_EXCHANGE: TPoint = [4628, 2061];
   end;
 
   TRSWalkerMap = record
@@ -104,10 +104,12 @@ begin
 
   Self.Regions := Self.Regions.Pack();
   Self.Map := TMufasaBitmap.Create(Self.Regions.Merge.Width(), Self.Regions.Merge.Height());
+  Self.map.FreeOnTerminate(True);
   for I := 0 to High(Self.Regions) do
     Self.Map.DrawBitmap(Bitmaps[I], TPoint.Create(Self.Regions[I].X1, Self.Regions[I].Y1));
 
   Self.ScaledMap := TMufasaBitmap.Create();
+  Self.ScaledMap.FreeOnTerminate(True);
   Self.Map.Downsample(Self.ScaledMap, Scaling);
 
   for I := 0 to High(Bitmaps) do
