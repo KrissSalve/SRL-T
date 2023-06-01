@@ -672,8 +672,8 @@ Example
 *)
 function TRSMainScreen.FindHPBars(Area: TBox): TRSHPBarArray;
 const
-  COLOR_BARS = [$00FF00, $0000FF];
-  COLOR_SPLATS = [$FF4040, $AD0703, $550503, $0000C0, $03037F, $010161, $FFFFFF, $000000];
+  COLOR_BARS = [$00FC00, $0000FC]; // corrected colors
+  COLOR_SPLATS = [$0000FC, $00005E, $0000BB, $AA0400, $FC3D3D, $4A0100, $FCFCFC, $000000]; // corrected colors (new value for solid colors from 255 to 252)
 const
   BAR_WIDTH = 29;
   BAR_HEIGHT = 4;
@@ -710,10 +710,10 @@ var
         if (Matrix[Y][X] = 254) and ((Matrix[Y][X-1] = 0) or (Matrix[Y][X+1] = 255)) then
         begin
           for YY := Max(Y - BAR_HEIGHT, 0) to Y do
-            if Matrix[YY][X] = $00FF00 then
+            if Matrix[YY][X] = $00FC00 then // corrected color
               goto Bad;
 
-          Matrix[Y][X] := $00FF00;
+          Matrix[Y][X] := $00FC00; // corrected color
           Result += [[X, Y, X + BAR_WIDTH, Y + BAR_HEIGHT]];
 
           Bad:
@@ -770,7 +770,7 @@ begin
          Continue;
 
         Bar.Bounds := Bar.Bounds.Offset([B.X1-1, B.Y1-1]);
-        if FindColors(TPA, $00FF00, Bar.Bounds) then
+    if FindColors(TPA, $00FC00, Bar.Bounds) then // corrected colors
           Bar.Percent := TPA.Bounds().Width() / 30 * 100;
 
         Result += Bar;
@@ -889,7 +889,7 @@ begin
   inherited;
 
   for Splat in Self.FindHitsplats() do
-    Bitmap.DrawCircle(Splat.Position, 10, $00FF00);
+    Bitmap.DrawCircle(Splat.Position, 10, $00FF00); // Corrected color.
   for Bar in Self.FindHPBars() do
     Bitmap.DrawBox(Bar.Bounds, $00FFFF);
 end;
